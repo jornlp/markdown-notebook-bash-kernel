@@ -1,0 +1,71 @@
+{
+  "name": "markdown-notebook-bash-kernel",
+  "displayName": "Markdown Notebook Bash Kernel",
+  "description": "Adds a runnable Bash kernel for markdown-notebook files.",
+  "version": "0.0.5",
+  "publisher": "local",
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.70.0"
+  },
+  "categories": [
+    "Notebook"
+  ],
+  "activationEvents": [
+    "onNotebook:markdown-notebook",
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Markdown Notebook Bash Kernel",
+      "properties": {
+        "markdownNotebookBashKernel.runInTerminal": {
+          "type": "boolean",
+          "default": true,
+          "description": "If true, send cell commands to VS Code integrated terminal instead of capturing output directly into the notebook cell."
+        },
+        "markdownNotebookBashKernel.cwdMode": {
+          "type": "string",
+          "enum": [
+            "workspace",
+            "notebook"
+          ],
+          "default": "workspace",
+          "description": "Working directory mode: 'workspace' uses the current workspace folder; 'notebook' uses the markdown file folder."
+        },
+        "markdownNotebookBashKernel.shellExecutable": {
+          "type": "string",
+          "default": "/bin/bash",
+          "description": "Executable used for direct execution mode (runInTerminal=false)."
+        },
+        "markdownNotebookBashKernel.shellArgs": {
+          "type": "array",
+          "default": [
+            "-lc"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Arguments for direct execution mode. Use '{code}' to place cell text explicitly; if omitted, cell text is appended as last argument."
+        },
+        "markdownNotebookBashKernel.terminalShellExecutable": {
+          "type": "string",
+          "default": "",
+          "description": "Optional shell executable for integrated terminal mode (for example 'docker'). Leave empty to use VS Code terminal default shell/profile."
+        },
+        "markdownNotebookBashKernel.terminalShellArgs": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Arguments for terminalShellExecutable in integrated terminal mode."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node ./scripts/build.mjs"
+  }
+}
