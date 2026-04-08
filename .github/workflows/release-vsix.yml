@@ -1,0 +1,52 @@
+name: Build VSIX Release Package
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+
+jobs:
+  build-vsix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build extension
+        run: npm run build
+
+      - name: Package VSIX
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
+          VSIX_FILE="${NAME}-${VERSION}.vsix"
+
+          npx @vscode/vsce package --out "$VSIX_FILE"
+
+          echo "VSIX_FILE=$VSIX_FILE" >> "$GITHUB_ENV"
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.VSIX_FILE }}
+          path: ${{ env.VSIX_FILE }}
+          if-no-files-found: error
+
+      - name: Attach VSIX to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.VSIX_FILE }}

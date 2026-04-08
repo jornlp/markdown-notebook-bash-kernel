@@ -17,8 +17,17 @@ This does all of the following:
 ## Manual build
 
 ```bash
-
 npm run build
+```
+
+## Release package
+
+Published GitHub Releases include a downloadable `.vsix` package built by GitHub Actions.
+
+For local installation and development, continue using:
+
+```bash
+./scripts/install.sh
 ```
 
 ## Use in VS Code
